@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import Menu from '../pages/Menu';
 
 const baseUrl="http://localhost:3001/login";
 
@@ -63,7 +64,12 @@ class Login extends Component {
                             onChange={this.handleChange}
                         />
                         <br />
-                        <button className="btn btn-primary" onClick={() => this.iniciarSesion()}>Iniciar Sesión</button>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => this.iniciarSesion()}>
+                            Iniciar Sesión
+                        </button>
                     </div>
                 </div>
             </div>

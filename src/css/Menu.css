@@ -1,0 +1,23 @@
+.cerrarSesion{
+  position:absolute;
+    left: 50%;
+    top: 90%;
+    transform: translate(-50%, -50%);
+}
+
+.containerMenu{
+    position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid blue;
+      padding: 40px;
+      background-color: white;
+  }
+  
+  .container2{
+    text-align: center;
+    border: 1px solid blue;
+    padding: 20px;
+    background-color: white;
+  }

@@ -1,80 +1,76 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { iniciarSesion, register } from '../redux'
+import { Redirect } from 'react-router-dom'
 import '../css/Login.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
-import Menu from '../pages/Menu';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 
-const baseUrl="http://localhost:3001/login";
+function Login(props) {
 
-class Login extends Component {
-    state={
-        form:{
-            username: '',
-            password: ''
-        }
-    }
+    const [pass, setPass] = useState("")
+    const [user, setUser] = useState("")
 
-    handleChange=async e=>{
-        await this.setState({
-            form:{
-                ...this.state.form,
-                [e.target.name]: e.target.value
-            }
-        });
-    }
-    
-    iniciarSesion=async()=>{
-        await axios.post(baseUrl, {username: this.state.form.username, password: this.state.form.password})
-        .then(response=>{
-            console.log(response.data);
-            return response.data;
-        })
-        .then(response=>{
-            if(response.data){
-                window.location.href="./menu";
-            }else{
-                alert('El usuario o la contraseña no son correctos');
-            }
-        })
-        .catch(error=>{
-            alert('El usuario o la contraseña no son correctos');
-        })
-    }
-
-    render() {
-        return (
-            <div className="containerPrincipal">
-                <div className="containerSecundario">
-                    <div className="form-group">
-                        <label>Usuario: </label>
-                        <br />
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="username"
-                            onChange={this.handleChange}
-                        />
-                        <br />
-                        <label>Contraseña: </label>
-                        <br />
-                        <input
-                            type="password"
-                            className="form-control"
-                            name="password"
-                            onChange={this.handleChange}
-                        />
-                        <br />
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => this.iniciarSesion()}>
-                            Iniciar Sesión
-                        </button>
-                    </div>
+    const { authuser } = props;
+    if (authuser) return <Redirect to='/menu' />
+    return (
+        <div className="containerPrincipal">
+            <div className="containerSecundario">
+                <div className="form-group">
+                    <label>Usuario: </label>
+                    <br />
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="username"
+                        value={user}
+                        onChange={e => setUser(e.target.value)}
+                    />
+                    <br />
+                    <label>Contraseña: </label>
+                    <br />
+                    <input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        value={pass}
+                        onChange={e => setPass(e.target.value)}
+                    />
+                    <br />
+                    <br />
+                    <button
+                        type="button"
+                        className="waves-effect waves-light btn blue"
+                        onClick={() => props.iniciarSesion({user, pass})}>
+                        Iniciar Sesión
+                    </button>
+                    <br />
+                    <br />
+                    <button
+                        type="button"
+                        className="waves-effect waves-light btn blue"
+                        onClick={() => props.register({user, pass})}>
+                        Registrarme
+                    </button>
                 </div>
             </div>
-        );
+        </div>
+    )
+}
+
+const mapStateToProps = state => {
+    return {
+        authuser: state.login.form.userId
     }
 }
 
-export default Login;
+const mapDispatchToProps = dispatch => {
+    return {
+        iniciarSesion: ({user, pass}) => dispatch(iniciarSesion({user, pass})),
+        register: ({user, pass}) => dispatch(register({user, pass}))
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login)

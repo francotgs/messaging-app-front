@@ -1,0 +1,4 @@
+export const MSG_SEND = 'MSG_SEND'
+export const ERASE_MSG = 'ERASE_MSG'
+export const GUARDAR_MENSAJES = 'GUARDAR_MENSAJES'
+export const GUARDAR_USUARIOS = 'GUARDAR_USUARIOS'

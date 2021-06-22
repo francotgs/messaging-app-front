@@ -1,74 +1,127 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { eraseMsg, enviarMensaje, userLogoutSuccess, traerMensajes, traerUsuarios } from '../redux'
+import { Redirect } from 'react-router-dom'
 import '../css/Menu.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 
-class Menu extends Component {
+function Menu(props) {
 
-    state = {
-        message: {
-            content: '',
-            senderId: '',
-            receiverId: '',
-        }
-    }
-
-    cerrarSesion = () => {
-        window.location.href = './';
-    }
-
-    handleChange = async e => {
-        await this.setState({
-            form: {
-                ...this.state.form,
-                [e.target.name]: e.target.value
-            }
-        });
-    }
-
-    render() {
-        return (
-            <div>
-                <div className="containerPrincipal">
-                    <div className="containerSecundario">
-                        <div className="form-group">
-                            <label>Id del destinatario:</label>
-                            <br />
+    const [receiver, setReceiver] = useState("")
+    const [msg, setMsg] = useState("")
+    const authuser = props.authuser;
+    const usuarios = props.usuarios;
+    const messages = props.messages;
+    
+    if (authuser === '') return <Redirect to='/' />
+    return (
+        <div className="row">
+            <div className="col s3">
+                <div className="container">
+                    <br />
+                    <br />
+                    <button
+                        type="button"
+                        className="waves-effect waves-light btn grey darken-1"
+                        onClick={() => { props.traerUsuarios() }}>
+                        Mostrar Usuarios
+                    </button>
+                    <div className="users">
+                        <ul>
+                            {usuarios?.map((user) => (
+                            <li key={user.username}>
+                                    {user.username}
+                            </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div className="col s9">
+                <div className="container">
+                    <h3 className="grey-text text-darken-3">Bienvenido @{props.username}</h3>
+                </div>
+                <div className="container">
+                    <div className="container-input">
+                        <div className="input-field">
                             <input
+                                id="id"
                                 type="text"
-                                className="form-control"
-                                name="senderId"
-                                onChange={this.handleChange}
+                                name="receiverId"
+                                value={receiver}
+                                onChange={e => setReceiver(e.target.value)}
                             />
-                            <br />
-                            <label>Mensaje:</label>
-                            <br />
-                            <input
-                                type="password"
-                                className="form-control"
-                                name="content"
-                                onChange={this.handleChange}
-                            />
-                            <br />
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={() => this.cerrarSesion()}>
-                                Enviar mensaje
-                            </button>
+                            <label htmlFor="id">Id del destinatario:</label>
                         </div>
+                    </div>
+                    <div className="container-mensajes">
+                        <div className="messages">
+                            <ul>
+                                {messages?.map((message) => (
+                                <li key={message.date}>
+                                    {message.content}
+                                </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    <br />
+                    <div className="container-mensaje">
+                        <div className="container-input">
+                            <div className="input-field">
+                                <input
+                                    id="message"
+                                    type="text"
+                                    name="content"
+                                    value={msg}
+                                    onChange={e => setMsg(e.target.value)}
+                                />
+                                <label htmlFor="message">Mensaje:</label>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <button
+                            type="button"
+                            className="waves-effect waves-light btn blue"
+                            onClick={() => props.enviarMensaje({ msg, receiver })}>
+                            Enviar mensaje
+                        </button>
                     </div>
                 </div>
                 <div className="cerrarSesion">
                     <button
                         type="button"
-                        className="btn btn-secondary"
-                        onClick={() => this.cerrarSesion()}>
+                        className="waves-effect waves-light btn grey darken-1"
+                        onClick={() => { props.userLogoutSuccess(); props.eraseMsg() }}>
                         Cerrar Sesión
                     </button>
                 </div>
             </div>
-        );
+        </div>
+    );
+}
+
+const mapStateToProps = state => {
+    return {
+        authuser: state.login.form.userId,
+        username: state.login.form.username,
+        usuarios: state.menu.usuarios,
+        messages: state.menu.messages
     }
 }
 
-export default Menu;
+const mapDispatchToProps = dispatch => {
+    return {
+        enviarMensaje: ({ msg, receiver }) => dispatch(enviarMensaje({ msg, receiver })),
+        userLogoutSuccess: () => dispatch(userLogoutSuccess()),
+        eraseMsg: () => dispatch(eraseMsg()),
+        traerMensajes: () => dispatch(traerMensajes()),
+        traerUsuarios: () => dispatch(traerUsuarios())
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Menu)

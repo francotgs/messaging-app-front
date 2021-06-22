@@ -1,4 +1,4 @@
-import { MSG_SEND, ERASE_MSG, GUARDAR_MENSAJES, GUARDAR_USUARIOS } from './menuTypes'
+import { MSG_SEND, ERASE_MSG, GUARDAR_MENSAJES, GUARDAR_USUARIOS, BORRAR_MENSAJES, BORRAR_USUARIOS } from './menuTypes'
 
 const initialState = {
   message:{
@@ -38,6 +38,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         usuarios: action.payload
+      }
+    case BORRAR_MENSAJES:
+      return {
+        ...state,
+        messages: []
+      }
+    case BORRAR_USUARIOS:
+      return {
+        ...state,
+        usuarios: []
       }
     default: return state
   }

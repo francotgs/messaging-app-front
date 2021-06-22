@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MSG_SEND, ERASE_MSG, GUARDAR_MENSAJES, GUARDAR_USUARIOS } from './menuTypes'
+import { MSG_SEND, ERASE_MSG, GUARDAR_MENSAJES, GUARDAR_USUARIOS, BORRAR_MENSAJES, BORRAR_USUARIOS } from './menuTypes'
 
 const mensajesUrl = "http://localhost:3001/messages";
 const conversationsUrl = "http://localhost:3001/conversations";
@@ -63,6 +63,14 @@ export const traerUsuarios = () => {
   }
 }
 
+export const userLogout = () => {
+  return (dispatch) => {
+    dispatch(eraseMsg());
+    dispatch(borrarMensajes());
+    dispatch(borrarUsuarios());
+  }
+}
+
 export const msgSend = ({ msg, receiver }) => {
   return {
     type: MSG_SEND,
@@ -73,6 +81,18 @@ export const msgSend = ({ msg, receiver }) => {
 export const eraseMsg = () => {
   return {
     type: ERASE_MSG
+  }
+}
+
+export const borrarMensajes = () => {
+  return {
+    type: BORRAR_MENSAJES
+  }
+}
+
+export const borrarUsuarios = () => {
+  return {
+    type: BORRAR_USUARIOS
   }
 }
 

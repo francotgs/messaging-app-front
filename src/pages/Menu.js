@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { enviarMensaje, userLogoutSuccess, traerMensajes, traerUsuarios, userLogout } from '../redux'
+import { enviarMensaje, traerMensajes, traerUsuarios } from '../redux'
 import { Redirect } from 'react-router-dom'
 import '../css/Menu.css';
 //import 'bootstrap/dist/css/bootstrap.min.css';
@@ -89,14 +89,6 @@ function Menu(props) {
                         </button>
                     </div>
                 </div>
-                <div className="cerrarSesion">
-                    <button
-                        type="button"
-                        className="waves-effect waves-light btn grey darken-1"
-                        onClick={() => { props.userLogoutSuccess(); props.userLogout() }}>
-                        Cerrar Sesión
-                    </button>
-                </div>
             </div>
         </div>
     );
@@ -114,10 +106,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         enviarMensaje: ({ msg, receiver }) => dispatch(enviarMensaje({ msg, receiver })),
-        userLogoutSuccess: () => dispatch(userLogoutSuccess()),
         traerMensajes: () => dispatch(traerMensajes()),
         traerUsuarios: () => dispatch(traerUsuarios()),
-        userLogout: () => dispatch(userLogout())
     }
 }
 

@@ -6,11 +6,11 @@ import thunk from 'redux-thunk'
 
 import rootReducer from './rootReducer';
 
-export const store = createStore(
+const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(logger, thunk))
 );
 
-export const persistor = persistStore(store);
+const persistor = persistStore(store);
 
-export default { store, persistor }
+export { store, persistor }

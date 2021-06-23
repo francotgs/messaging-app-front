@@ -11,3 +11,13 @@
     padding: 10px;
     background-color: white;
 }
+
+.link-button {
+  background: none!important;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline;
+  margin: 0;
+  padding: 15px;
+}

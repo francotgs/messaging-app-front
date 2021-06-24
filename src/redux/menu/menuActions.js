@@ -19,19 +19,18 @@ export const enviarMensaje = ({ msg, receiver }) => {
       .then(response => {
         console.log(response.data);
         dispatch(msgSend({ msg, receiver }));
-        dispatch(traerMensajes());
+        dispatch(traerMensajes(receiver));
       })
       .catch(error => {
-        alert('Error');
+        alert('Error, seleccionar destinatario');
       })
   }
 }
 
-export const traerMensajes = () => {
+export const traerMensajes = (receiver) => {
   return (dispatch, getState) => {
     const {userId} = getState().login.form;
-    const {receiverId} = getState().menu.message;
-    if (receiverId !== "") {
+      const receiverId = parseInt(receiver);
       axios
       .get(conversationsUrl, {
         params: {
@@ -45,7 +44,7 @@ export const traerMensajes = () => {
       .catch(error => {
         alert('Error al traer mensajes');
       })
-    }
+
   }
 }
 

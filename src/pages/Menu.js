@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { enviarMensaje, traerMensajes, traerUsuarios } from '../redux'
 import { Redirect } from 'react-router-dom'
@@ -12,7 +12,15 @@ function Menu(props) {
     const authuser = props.authuser;
     const usuarios = props.usuarios;
     const messages = props.messages;
-    
+
+    useEffect(() => {
+        console.log(receiver)
+        if (receiver !== ""){
+            props.traerMensajes(receiver)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [receiver]);
+
     if (authuser === '') return <Redirect to='/' />
     return (
         <div className="row">
@@ -28,11 +36,23 @@ function Menu(props) {
                     </button>
                     <div className="users">
                         <ul>
-                            {usuarios?.map((user) => (
-                            <li key={user.username}>
-                                    {user.username}
-                            </li>
-                            ))}
+                            {usuarios?.map((user) => {
+                                if (user.id !== props.authuser) {
+                                    return (
+                                        <li key={user.id}>
+                                            <button
+                                                type="button"
+                                                className="waves-effect waves-light btn blue"
+                                                value={user.username}
+                                                onClick={() => setReceiver(user.id)}>
+                                                {user.username}
+                                            </button>
+                                            <br />
+                                            <br />
+                                        </li>
+                                    );
+                                } return null;
+                            })}
                         </ul>
                     </div>
                 </div>
@@ -42,7 +62,7 @@ function Menu(props) {
                     <h3 className="grey-text text-darken-3">Bienvenido @{props.username}</h3>
                 </div>
                 <div className="container">
-                    <div className="container-input">
+                    {/* <div className="container-input">
                         <div className="input-field">
                             <input
                                 id="id"
@@ -53,7 +73,7 @@ function Menu(props) {
                             />
                             <label htmlFor="id">Id del destinatario:</label>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="container-mensajes">
                         <div className="messages">
                             <ul>
@@ -84,7 +104,10 @@ function Menu(props) {
                         <button
                             type="button"
                             className="waves-effect waves-light btn blue"
-                            onClick={() => props.enviarMensaje({ msg, receiver })}>
+                            onClick={() => {
+                                props.enviarMensaje({ msg, receiver });
+                                setMsg("")
+                                }}>
                             Enviar mensaje
                         </button>
                     </div>
@@ -106,7 +129,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         enviarMensaje: ({ msg, receiver }) => dispatch(enviarMensaje({ msg, receiver })),
-        traerMensajes: () => dispatch(traerMensajes()),
+        traerMensajes: (receiver) => dispatch(traerMensajes(receiver)),
         traerUsuarios: () => dispatch(traerUsuarios()),
     }
 }

@@ -21,3 +21,8 @@
   margin: 0;
   padding: 15px;
 }
+
+.dropdown {
+  position:relative;
+  z-Index: 100
+}

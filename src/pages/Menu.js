@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { enviarMensaje, traerMensajes, traerUsuarios } from '../redux'
-import { Redirect } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { enviarMensaje, traerMensajes, traerUsuarios } from '../redux';
+import { Redirect } from 'react-router-dom';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 import '../css/Menu.css';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -9,9 +11,17 @@ function Menu(props) {
 
     const [receiver, setReceiver] = useState("")
     const [msg, setMsg] = useState("")
+    const [search, setSearch] = useState("")
     const authuser = props.authuser;
     const usuarios = props.usuarios;
     const messages = props.messages;
+    let optionUsers = usuarios?.filter((item) => {
+        if(item.id===authuser){
+            return false;
+        }
+        return true;
+    }).map(({id, username}) => ({value:id, label:username}));
+    console.log(optionUsers);
 
     useEffect(() => {
         console.log(receiver)
@@ -21,6 +31,11 @@ function Menu(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [receiver]);
 
+    useEffect(() => {
+        props.traerUsuarios();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     if (authuser === '') return <Redirect to='/' />
     return (
         <div className="row">
@@ -28,12 +43,12 @@ function Menu(props) {
                 <div className="container">
                     <br />
                     <br />
-                    <button
+                    {/* <button
                         type="button"
                         className="waves-effect waves-light btn grey darken-1"
                         onClick={() => { props.traerUsuarios() }}>
                         Mostrar Usuarios
-                    </button>
+                    </button> */}
                     <div className="users">
                         <ul>
                             {usuarios?.map((user) => {
@@ -61,7 +76,25 @@ function Menu(props) {
                 <div className="container">
                     <h3 className="grey-text text-darken-3">Bienvenido @{props.username}</h3>
                 </div>
+                <br />
                 <div className="container">
+                    <Select
+                        className="dropdown"
+                        placeholder="Seleccionar destinatario"
+                        components={makeAnimated()}
+                        options={optionUsers}
+                        onChange={e => setReceiver(e.value)}
+                        isSearchable
+                    />
+                    <div className="input-field">
+                        <input
+                            id="search"
+                            type="text"
+/*                          placeholder="Buscar mensajes..."
+ */                         onChange={e => setSearch(e.target.value)}
+                        />
+                        <label htmlFor="search">Buscar mensajes:</label>
+                    </div>
                     {/* <div className="container-input">
                         <div className="input-field">
                             <input
@@ -77,9 +110,15 @@ function Menu(props) {
                     <div className="container-mensajes">
                         <div className="messages">
                             <ul>
-                                {messages?.map((message) => (
-                                <li key={message.date}>
-                                    {message.content}
+                                {messages?.filter((message)=>{
+                                    if (search === "") {
+                                        return message
+                                    } else if (message.content.toLowerCase().includes(search.toLowerCase())){
+                                        return message
+                                    } return null
+                                }).map((message, key) => (
+                                <li className="message" key={key}>
+                                    <p>{message.content}</p>
                                 </li>
                                 ))}
                             </ul>

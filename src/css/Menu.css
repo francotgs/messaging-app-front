@@ -1,14 +1,16 @@
-.cerrarSesion{
+/* .cerrarSesion{
   position:absolute;
     left: 50%;
     top: 90%;
     transform: translate(-50%, -50%);
-}
+} */
 
 .container-mensajes {
   position: static;
-    border: 3px solid #0275d8;
-    padding: 10px;
+    border: 3px solid rgb(46, 155, 228);
+    padding: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
     background-color: white;
 }
 
@@ -25,4 +27,63 @@
 .dropdown {
   position:relative;
   z-Index: 100
+}
+
+.messages {
+  height: 350px;
+  
+  overflow-y: auto;
+}
+
+.message {
+  overflow-y: auto;
+/*   display: flex;
+ */}
+
+.message p {
+  margin: 5px;
+  font-size: 17px;
+  padding: 10px;
+  display: inline-block;
+  position: relative;
+}
+
+.msg_der {
+  float: right;
+}
+
+.msg_izq {
+  float: left;
+}
+
+.text {
+  float: right
+}
+
+.timestamp {
+  font-size: 11px;
+  position: relative;
+  display: block;
+  bottom: 0px;
+  right: 0px;
+}
+
+.intimestamp {
+  float: right;
+}
+
+::-webkit-scrollbar{
+  width: 10px
+}
+
+/* ::-webkit-scrollbar-track{
+} */
+
+::-webkit-scrollbar-thumb{
+  background: rgb(169, 219, 253);
+  border-radius: 25px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background: rgb(46, 155, 228);
 }

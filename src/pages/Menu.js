@@ -109,7 +109,6 @@ function Menu(props) {
                     </div> */}
                     <div className="container-mensajes">
                         <div className="messages">
-                            <ul>
                                 {messages?.filter((message)=>{
                                     if (search === "") {
                                         return message
@@ -117,11 +116,33 @@ function Menu(props) {
                                         return message
                                     } return null
                                 }).map((message, key) => (
-                                <li className="message" key={key}>
-                                    <p>{message.content}</p>
-                                </li>
+                                <div className="message" key={key}>
+                                    <p className={message.senderId===props.authuser ?
+                                        "msg_der card-panel blue white-text":
+                                        "msg_izq card-panel blue white-text"}
+                                    >
+                                        <span className="text">
+                                            {message.content}
+                                        </span>
+                                        <span className="timestamp">
+                                            <span className="intimestamp">
+                                                {(() => {
+                                                    var date2 = new Date(message.date);
+                                                    var hours = date2.getHours();
+                                                    var minutes = date2.getMinutes();
+                                                    if(minutes<10) {
+                                                        minutes='0'+minutes;
+                                                    }
+                                                    if (hours<10) {
+                                                        hours='0'+hours;
+                                                    }
+                                                    return <span>{hours}:{minutes}</span>
+                                                })()}
+                                            </span>
+                                        </span>
+                                    </p>
+                                </div>
                                 ))}
-                            </ul>
                         </div>
                     </div>
                     <br />
@@ -138,8 +159,6 @@ function Menu(props) {
                                 <label htmlFor="message">Mensaje:</label>
                             </div>
                         </div>
-                        <br />
-                        <br />
                         <button
                             type="button"
                             className="waves-effect waves-light btn blue"

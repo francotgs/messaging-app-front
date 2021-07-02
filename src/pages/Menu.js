@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import '../css/Menu.css';
+import axios from 'axios';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Menu(props) {
@@ -12,6 +13,8 @@ function Menu(props) {
     const [receiver, setReceiver] = useState("")
     const [msg, setMsg] = useState("")
     const [search, setSearch] = useState("")
+    const [gralSearch, setGeneralSearch] = useState("")
+    const [file, setFile] = useState("")
     const authuser = props.authuser;
     const usuarios = props.usuarios;
     const messages = props.messages;
@@ -36,11 +39,20 @@ function Menu(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const fileUploadHandler = () => {
+        const fd = new FormData();
+        fd.append('file', file);
+        axios.post('http://localhost:3001/CargarImagen', fd)
+            .then(res => {
+                console.log(res);
+            });
+    };
+
     if (authuser === '') return <Redirect to='/' />
     return (
         <div className="row">
-            <div className="col s3">
-                <div className="container">
+            <div className="col s2">
+                <div className="containerIzq">
                     <br />
                     <br />
                     {/* <button
@@ -72,12 +84,10 @@ function Menu(props) {
                     </div>
                 </div>
             </div>
-            <div className="col s9">
+            <div className="col s6">
                 <div className="container">
                     <h3 className="grey-text text-darken-3">Bienvenido @{props.username}</h3>
-                </div>
-                <br />
-                <div className="container">
+                    <br />
                     <Select
                         className="dropdown"
                         placeholder="Seleccionar destinatario"
@@ -168,6 +178,100 @@ function Menu(props) {
                                 }}>
                             Enviar mensaje
                         </button>
+                        <div className="input-field">
+                            <input
+                                type="file"
+                                onChange={e => setFile(e.target.files[0])}
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            className="waves-effect waves-light btn blue"
+                            onClick={fileUploadHandler}>
+                            Cargar imagen
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div className="col s4">
+                <div className="containerDer">
+                    <br />
+                    <div className="input-field">
+                        <input
+                            id="generalsearch"
+                            type="text"
+                            onChange={e => setGeneralSearch(e.target.value)}
+                        />
+                        <label htmlFor="generalsearch">Búsqueda general:</label>
+                    </div>
+                    <h6 className="grey-text text-darken-3">Usuarios:</h6>
+                    <div className="container-mensajes">
+                        <div className="messages-der">
+                        <ul>
+                            {usuarios?.filter((user)=>{
+                                    if (gralSearch === "") {
+                                        return null
+                                    } else if (user.username.toLowerCase().includes(gralSearch.toLowerCase())){
+                                        return user
+                                    } return null
+                                }).map((user) => {
+                                if (user.id !== props.authuser) {
+                                    return (
+                                        <li key={user.id}>
+                                            <button
+                                                type="button"
+                                                className="waves-effect waves-light btn blue"
+                                                value={user.username}
+                                                onClick={() => setReceiver(user.id)}>
+                                                {user.username}
+                                            </button>
+                                            <br />
+                                            <br />
+                                        </li>
+                                    );
+                                } return null;
+                            })}
+                        </ul>
+                        </div>
+                    </div>
+                    <h6 className="grey-text text-darken-3">Mensajes:</h6>
+                    <div className="container-mensajes">
+                        <div className="messages-der">
+                                {messages?.filter((message)=>{
+                                    if (gralSearch === "") {
+                                        return null
+                                    } else if (message.content.toLowerCase().includes(gralSearch.toLowerCase())){
+                                        return message
+                                    } return null
+                                }).map((message, key) => (
+                                <div className="message" key={key}>
+                                    <p className={message.senderId===props.authuser ?
+                                        "msg_der card-panel blue white-text":
+                                        "msg_izq card-panel blue white-text"}
+                                    >
+                                        <span className="text">
+                                            {message.content}
+                                        </span>
+                                        <span className="timestamp">
+                                            <span className="intimestamp">
+                                                {(() => {
+                                                    var date2 = new Date(message.date);
+                                                    var hours = date2.getHours();
+                                                    var minutes = date2.getMinutes();
+                                                    if(minutes<10) {
+                                                        minutes='0'+minutes;
+                                                    }
+                                                    if (hours<10) {
+                                                        hours='0'+hours;
+                                                    }
+                                                    return <span>{hours}:{minutes}</span>
+                                                })()}
+                                            </span>
+                                        </span>
+                                    </p>
+                                </div>
+                                ))}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ const Navbar = (props) => {
   const links = auth ? <SignedInLinks /> : <SignedOutLinks />;
   return (
     <nav className="nav-wrapper blue">
-      <div className="container">
+      <div className="containerNav">
         <Link className="brand-logo" to="/">Messaging App</Link>
         <ul className="right">
           {links}

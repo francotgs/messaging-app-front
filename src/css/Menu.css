@@ -5,6 +5,28 @@
     transform: translate(-50%, -50%);
 } */
 
+.containerNav {
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.container {
+  margin: 0;
+  display: inline;
+}
+
+.containerDer {
+  margin-right: 30px;
+  margin-left: 30px;
+  margin-top: 0px;
+}
+
+.containerIzq {
+  margin-right: 0px;
+  margin-left: 15px;
+  margin-top: 0px;
+}
+
 .container-mensajes {
   position: static;
     border: 3px solid rgb(46, 155, 228);
@@ -31,7 +53,6 @@
 
 .messages {
   height: 350px;
-  
   overflow-y: auto;
 }
 
@@ -86,4 +107,9 @@
 
 ::-webkit-scrollbar-thumb:hover{
   background: rgb(46, 155, 228);
+}
+
+.messages-der {
+  overflow-y: auto;
+  height: 280px;
 }

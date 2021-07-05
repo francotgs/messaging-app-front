@@ -45,7 +45,25 @@ function Menu(props) {
         axios.post('http://localhost:3001/CargarImagen', fd)
             .then(res => {
                 console.log(res);
-            });
+                const filename = res.data.filename;
+                axios
+                .post("http://localhost:3001/messages", {
+                    content: filename,
+                    receiverId: receiver,
+                    senderId: authuser,
+                    isfile: true,
+                })
+                .then(response => {
+                    console.log(response);
+                    props.traerMensajes(receiver);
+                })
+                .catch(error => {
+                    alert('Error para enviar mensaje de imagen');
+                })
+            })
+            .catch(error => {
+                alert('El archivo seleccionado no es válido');
+            })
     };
 
     if (authuser === '') return <Redirect to='/' />
@@ -132,7 +150,24 @@ function Menu(props) {
                                         "msg_izq card-panel blue white-text"}
                                     >
                                         <span className="text">
-                                            {message.content}
+                                            {(() => {
+                                                if (message.isfile === true) {
+                                                    return (
+                                                        <button
+                                                            type="button"
+                                                            className="waves-effect waves-light btn blue"
+                                                            value={message.content}
+                                                            onClick={e => {
+                                                                    e.preventDefault();
+                                                                    var myUrl = "http://localhost:3001/files/" + message.content;
+                                                                    window.location.href=myUrl;
+                                                                    }}
+                                                        >
+                                                            descargar {message.content}
+                                                        </button>
+                                                    );
+                                                } return message.content;                                                
+                                            })()}
                                         </span>
                                         <span className="timestamp">
                                             <span className="intimestamp">
@@ -188,7 +223,7 @@ function Menu(props) {
                             type="button"
                             className="waves-effect waves-light btn blue"
                             onClick={fileUploadHandler}>
-                            Cargar imagen
+                            Cargar archivo
                         </button>
                     </div>
                 </div>

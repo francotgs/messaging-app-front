@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Front end for a messaging application made in React
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+![Sin título](https://user-images.githubusercontent.com/77608824/127962185-028a71b1-1364-48b9-9713-222e4b75cb62.png)
 
 ## Available Scripts
 
